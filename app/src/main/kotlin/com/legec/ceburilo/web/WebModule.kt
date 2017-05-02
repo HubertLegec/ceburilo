@@ -1,5 +1,8 @@
 package com.legec.ceburilo.web
 
+import com.legec.ceburilo.web.maps.GoogleLocationService
+import com.legec.ceburilo.web.veturilo.VeturiloApiClient
+import com.legec.ceburilo.web.veturilo.VeturiloApiService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -27,5 +30,11 @@ class WebModule {
     @Singleton
     fun providesVeturiloService(veturiloApiClient: VeturiloApiClient): VeturiloApiService {
         return VeturiloApiService(veturiloApiClient)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGoogleLocationService(): GoogleLocationService {
+        return GoogleLocationService()
     }
 }

@@ -1,4 +1,4 @@
-package com.legec.ceburilo.web
+package com.legec.ceburilo.web.veturilo
 
 
 interface VeturiloPlacesCallback {
