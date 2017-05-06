@@ -26,7 +26,6 @@ class PermissionHelper(private val context: Context) {
                 // requestCode is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
-            }
         }
     }
 }
