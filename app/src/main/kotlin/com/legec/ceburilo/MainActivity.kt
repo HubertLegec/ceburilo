@@ -12,6 +12,7 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.legec.ceburilo.utils.PermissionHelper
 import com.legec.ceburilo.web.maps.GoogleLocationService
 import com.legec.ceburilo.web.veturilo.VeturiloApiService
 import com.legec.ceburilo.web.veturilo.VeturiloPlace
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MAIN_ACTIVITY"
+    private val permissionHelper = PermissionHelper(this)
     @Inject lateinit var veturiloApiService: VeturiloApiService
     @Inject lateinit var googleLocationService: GoogleLocationService
     @BindView(R.id.fromPoint)
@@ -41,7 +43,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        googleLocationService.connectApiClient(this)
+        if (permissionHelper.checkLocationPermission()) {
+            googleLocationService.connectApiClient(this)
+        }
         getVeturiloPlaces()
         super.onStart()
     }
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getVeturiloPlaces() {
-        veturiloApiService.getVeturiloPlaces(object: VeturiloPlacesCallback {
+        veturiloApiService.getVeturiloPlaces(object : VeturiloPlacesCallback {
             override fun onSuccess(places: List<VeturiloPlace>) {
                 pointsAdapter.clear()
                 pointsAdapter.addAll(places)
@@ -78,5 +82,21 @@ class MainActivity : AppCompatActivity() {
         val l = googleLocationService.getCurrentLocation()
         Log.d(TAG, "Location:" + l.latitude + ", " + l.longitude)
         return l
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            permissionHelper.LOCATION_REQUEST_CODE -> {
+                if (permissionHelper.isLocationPermissionGranted(grantResults)) {
+                        googleLocationService.connectApiClient(this)
+                } else {
+                    // permission denied
+                    // TODO Disable the functionality that depends on this permission.
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
