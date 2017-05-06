@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
+import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.legec.ceburilo.web.maps.GoogleLocationService
@@ -17,6 +21,11 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MAIN_ACTIVITY"
     @Inject lateinit var veturiloApiService: VeturiloApiService
     @Inject lateinit var googleLocationService: GoogleLocationService
+    @BindView(R.id.fromPoint)
+    lateinit var fromSpinner: Spinner
+    @BindView(R.id.toPoint)
+    lateinit var toSpinner: Spinner
+    lateinit private var pointsAdapter: ArrayAdapter<VeturiloPlace>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +33,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         CeburiloApp.webComponent.inject(this)
+        pointsAdapter = ArrayAdapter(this, R.layout.spinner, ArrayList<VeturiloPlace>())
+        fromSpinner.adapter = pointsAdapter
+        toSpinner.adapter = pointsAdapter
     }
 
     override fun onStart() {
         googleLocationService.connectApiClient(this)
+        getVeturiloPlaces()
         super.onStart()
     }
 
@@ -36,21 +49,27 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    @OnClick(R.id.button)
-    fun onDownloadButtonClick(view: View) {
+    @OnClick(R.id.findButton)
+    fun onFindButtonClick(view: View) {
         Log.i(TAG, "button click")
+
+        val l = googleLocationService.getCurrentLocation()
+        Log.i(TAG, "Location:" + l.latitude + ", " + l.longitude)
+    }
+
+    private fun getVeturiloPlaces() {
         veturiloApiService.getVeturiloPlaces(object: VeturiloPlacesCallback {
             override fun onSuccess(places: List<VeturiloPlace>) {
-                Log.i(TAG, "places count: " + places.size)
+                pointsAdapter.clear()
+                pointsAdapter.addAll(places)
+                pointsAdapter.notifyDataSetChanged()
             }
 
             override fun onError(message: String) {
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, message)
             }
 
         })
-
-        val l = googleLocationService.getCurrentLocation()
-        Log.i(TAG, "Location:" + l.latitude + ", " + l.longitude)
     }
 }

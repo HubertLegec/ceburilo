@@ -32,4 +32,10 @@ class VeturiloPlace {
     var maintenance: Int = 0
     @field:Attribute(name = "bike_types", required = false)
     var bikeTypes: String = ""
+
+    override fun toString(): String {
+        return name
+    }
+
+
 }
