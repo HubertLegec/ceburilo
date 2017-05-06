@@ -1,5 +1,7 @@
 package com.legec.ceburilo
 
+import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -52,9 +54,8 @@ class MainActivity : AppCompatActivity() {
     @OnClick(R.id.findButton)
     fun onFindButtonClick(view: View) {
         Log.i(TAG, "button click")
-
-        val l = googleLocationService.getCurrentLocation()
-        Log.i(TAG, "Location:" + l.latitude + ", " + l.longitude)
+        val intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun getVeturiloPlaces() {
@@ -71,5 +72,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun getCurrentLocation(): Location {
+        val l = googleLocationService.getCurrentLocation()
+        Log.d(TAG, "Location:" + l.latitude + ", " + l.longitude)
+        return l
     }
 }

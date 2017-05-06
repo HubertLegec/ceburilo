@@ -3,4 +3,5 @@
     <string name="start_point_text">Wybierz punkt startowy:</string>
     <string name="end_point_text">Wybierz punkt docelowy:</string>
     <string name="find_route_button_text">Wyznacz trasę</string>
+    <string name="title_activity_maps">Ceburilo</string>
 </resources>
