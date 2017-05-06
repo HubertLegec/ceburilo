@@ -9,9 +9,9 @@ class VeturiloCity {
     @field:Attribute
     var uid: Int = 0
     @field:Attribute(name = "lat")
-    var latitude: String = ""
+    var latitude: Double = 0.0
     @field:Attribute(name = "lng")
-    var longtitude: String = ""
+    var longtitude: Double = 0.0
     @field:Attribute
     var zoom: Int = 0
     @field:Attribute(name = "maps_icon")

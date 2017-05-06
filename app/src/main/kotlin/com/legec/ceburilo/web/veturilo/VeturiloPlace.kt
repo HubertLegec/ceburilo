@@ -9,9 +9,9 @@ class VeturiloPlace {
     @field:Attribute
     var uid: Int = 0
     @field:Attribute(name = "lat")
-    var latitude: Float = 0f
+    var latitude: Double = 0.0
     @field:Attribute(name = "lng")
-    var longtitude: Float = 0f
+    var longtitude: Double = 0.0
     @field:Attribute
     var name: String = ""
     @field:Attribute

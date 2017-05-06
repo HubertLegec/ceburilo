@@ -6,6 +6,7 @@ import retrofit2.Response
 
 
 class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
+    private var lastFetchedPlaces: List<VeturiloPlace> = ArrayList()
 
     fun getVeturiloPlaces(callback: VeturiloPlacesCallback) {
         val request = veturiloApiClient.getVeturiloData()
@@ -16,6 +17,7 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
                         .cities
                         .first { city -> city.name == "Warszawa" }
                         .places
+                lastFetchedPlaces = places
                 callback.onSuccess(places)
             }
 
@@ -24,5 +26,9 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
             }
 
         })
+    }
+
+    fun getLastFetchedPlaces(): List<VeturiloPlace> {
+        return lastFetchedPlaces
     }
 }

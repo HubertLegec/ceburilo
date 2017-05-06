@@ -30,7 +30,15 @@
             android:id="@+id/fromPoint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginBottom="2dp" />
+
+        <Button
+            android:id="@+id/selectClosestButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="30dp"
+            android:text="@string/select_closest_button_text"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/textView2"

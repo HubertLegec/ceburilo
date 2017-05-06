@@ -13,6 +13,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.legec.ceburilo.utils.PermissionHelper
+import com.legec.ceburilo.utils.findNearestVeturiloPlace
 import com.legec.ceburilo.web.maps.GoogleLocationService
 import com.legec.ceburilo.web.veturilo.VeturiloApiService
 import com.legec.ceburilo.web.veturilo.VeturiloPlace
@@ -60,6 +61,14 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "button click")
         val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
+    }
+
+    @OnClick(R.id.selectClosestButton)
+    fun selectNearestVeturiloPoint() {
+        val location = getCurrentLocation()
+        val places = veturiloApiService.getLastFetchedPlaces()
+        val closestPoint = findNearestVeturiloPlace(location.latitude, location.longitude, places)
+        fromSpinner.setSelection(pointsAdapter.getPosition(closestPoint))
     }
 
     private fun getVeturiloPlaces() {
