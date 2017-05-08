@@ -31,4 +31,8 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
     fun getLastFetchedPlaces(): List<VeturiloPlace> {
         return lastFetchedPlaces
     }
+
+    fun getPlaceById(id: Long): VeturiloPlace {
+        return lastFetchedPlaces[id.toInt()]
+    }
 }

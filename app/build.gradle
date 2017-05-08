@@ -58,6 +58,7 @@ dependencies {
     }
     compile 'com.google.android.gms:play-services-maps:10.2.4'
     compile 'com.google.android.gms:play-services-location:10.2.4'
+    compile 'com.akexorcist:googledirectionlibrary:1.0.4'
 }
 
 kapt {

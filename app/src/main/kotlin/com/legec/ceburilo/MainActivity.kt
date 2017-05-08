@@ -60,6 +60,10 @@ class MainActivity : AppCompatActivity() {
     fun onFindButtonClick(view: View) {
         Log.i(TAG, "button click")
         val intent = Intent(this, MapsActivity::class.java)
+        val startPointId = fromSpinner.selectedItemId
+        val endPointId = toSpinner.selectedItemId
+        intent.putExtra("START_POINT_ID", startPointId)
+        intent.putExtra("END_POINT_ID", endPointId)
         startActivity(intent)
     }
 

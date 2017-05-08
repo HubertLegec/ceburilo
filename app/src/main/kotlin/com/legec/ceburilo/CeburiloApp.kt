@@ -15,7 +15,7 @@ class CeburiloApp: Application() {
     override fun onCreate() {
         super.onCreate()
         webComponent = DaggerWebComponent.builder()
-                .webModule(WebModule())
+                .webModule(WebModule(this))
                 .build()
     }
 }

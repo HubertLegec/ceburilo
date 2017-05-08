@@ -5,4 +5,6 @@
     <string name="find_route_button_text">Wyznacz trasę</string>
     <string name="title_activity_maps">Ceburilo</string>
     <string name="select_closest_button_text">Wybierz najbliższą stację</string>
+    <string name="start_point_id">START_POINT_ID</string>
+    <string name="end_point_id">END_POINT_ID</string>
 </resources>

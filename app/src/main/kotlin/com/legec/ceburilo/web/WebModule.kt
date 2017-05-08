@@ -1,5 +1,8 @@
 package com.legec.ceburilo.web
 
+import android.content.Context
+import com.legec.ceburilo.R
+import com.legec.ceburilo.web.directions.GoogleDirectionsService
 import com.legec.ceburilo.web.maps.GoogleLocationService
 import com.legec.ceburilo.web.veturilo.VeturiloApiClient
 import com.legec.ceburilo.web.veturilo.VeturiloApiService
@@ -12,7 +15,7 @@ import javax.inject.Singleton
 
 
 @Module
-class WebModule {
+class WebModule(private val context: Context) {
     private val API_BASE_URL = "https://nextbike.net/"
 
     @Provides
@@ -36,5 +39,12 @@ class WebModule {
     @Singleton
     fun providesGoogleLocationService(): GoogleLocationService {
         return GoogleLocationService()
+    }
+
+    @Provides
+    @Singleton
+    fun providesGoogleDirectionsService(): GoogleDirectionsService {
+        val googleApiKey = context.getString(R.string.google_directions_key)
+        return GoogleDirectionsService(googleApiKey, context)
     }
 }
