@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.Log
 import com.akexorcist.googledirection.DirectionCallback
 import com.akexorcist.googledirection.GoogleDirection
+import com.akexorcist.googledirection.constant.Language
 import com.akexorcist.googledirection.constant.TransportMode
 import com.akexorcist.googledirection.model.Direction
 import com.akexorcist.googledirection.util.DirectionConverter
@@ -39,6 +40,7 @@ class GoogleDirectionsService(private val serverKey: String, private val context
                 .from(startPoint)
                 .to(endPoint)
                 .transportMode(TransportMode.BICYCLING)
+                .language(Language.POLISH)
                 .execute(directionCallback)
     }
 

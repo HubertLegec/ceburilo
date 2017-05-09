@@ -3,20 +3,25 @@ package com.legec.ceburilo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindString
+import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import com.legec.ceburilo.utils.MapElements
 import com.legec.ceburilo.web.directions.GoogleDirectionsService
 import com.legec.ceburilo.web.directions.RouteCallback
 import com.legec.ceburilo.web.maps.GoogleLocationService
 import com.legec.ceburilo.web.veturilo.VeturiloApiService
+import com.legec.ceburilo.web.veturilo.VeturiloPlace
 import javax.inject.Inject
 
 
@@ -27,17 +32,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var startPointIdDescriptor: String
     @BindString(R.string.end_point_id)
     lateinit var endPointIdDescriptor: String
+    @BindView(R.id.distanceTV)
+    lateinit var distanceTV: TextView
+    @BindView(R.id.durationTV)
+    lateinit var durationTV: TextView
+    @BindView(R.id.progressbar_view)
+    lateinit var progressbarView: LinearLayout
     @Inject lateinit var googleLocationService: GoogleLocationService
     @Inject lateinit var veturiloApiService: VeturiloApiService
     @Inject lateinit var googleDirectionsService: GoogleDirectionsService
     private var mMap: GoogleMap? = null
-    private var startPointId: Long? = null
-    private var endPointId: Long? = null
-    private var routePolyline: Polyline? = null
+    private var startPoint: VeturiloPlace? = null
+    private var endPoint: VeturiloPlace? = null
+    private var mapElements: MapElements? = null
 
     private val callback = object: RouteCallback {
         override fun onSuccess(polyline: PolylineOptions, distance: String, duration: String) {
-            this@MapsActivity.routePolyline =mMap?.addPolyline(polyline)
+            updateMap(polyline)
+            distanceTV.text = "Dystans: " + distance
+            durationTV.text = "Czas przejazdu: " + duration
+            progressbarView.visibility = View.GONE
             Log.i(TAG, "Success")
         }
 
@@ -54,8 +68,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ButterKnife.bind(this)
         CeburiloApp.webComponent.inject(this)
-        startPointId = intent.getLongExtra(startPointIdDescriptor, 0)
-        endPointId = intent.getLongExtra(endPointIdDescriptor, 0)
+        updateStartAndEndPoint()
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -72,6 +85,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mapElements = MapElements(googleMap)
         mMap?.isMyLocationEnabled = true
         val currLoc = googleLocationService.getCurrentLocation()
         val latLong = LatLng(currLoc.latitude, currLoc.longitude)
@@ -81,11 +95,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun showRoute() {
-        routePolyline?.remove()
-        val startPoint = veturiloApiService.getPlaceById(startPointId!!)
-        val endPoint = veturiloApiService.getPlaceById(endPointId!!)
-        val startLatLng = LatLng(startPoint.latitude, startPoint.longtitude)
-        val endLatLng = LatLng(endPoint.latitude, endPoint.longtitude)
-        googleDirectionsService.getRoute(startLatLng, endLatLng, callback)
+        progressbarView.visibility = View.VISIBLE
+        mapElements?.clearMap()
+        googleDirectionsService.getRoute(
+                startPoint!!.getLatLng(),
+                endPoint!!.getLatLng(),
+                callback
+        )
+    }
+
+    private fun updateStartAndEndPoint() {
+        val startPointId = intent.getLongExtra(startPointIdDescriptor, 0)
+        val endPointId = intent.getLongExtra(endPointIdDescriptor, 0)
+        startPoint = veturiloApiService.getPlaceById(startPointId)
+        endPoint = veturiloApiService.getPlaceById(endPointId)
+    }
+
+    private fun updateMap(polyline: PolylineOptions) {
+        mapElements?.addPolyline(polyline)
+        mapElements?.addMarker(startPoint!!.name, startPoint!!.getLatLng())
+        mapElements?.addMarker(endPoint!!.name, endPoint!!.getLatLng())
     }
 }

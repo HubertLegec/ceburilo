@@ -1,5 +1,6 @@
 package com.legec.ceburilo.web.veturilo
 
+import com.google.android.gms.maps.model.LatLng
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Root
 
@@ -37,5 +38,8 @@ class VeturiloPlace {
         return name
     }
 
+    fun getLatLng(): LatLng {
+        return LatLng(latitude, longtitude)
+    }
 
 }
