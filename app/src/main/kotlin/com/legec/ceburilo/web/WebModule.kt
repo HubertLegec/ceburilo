@@ -43,8 +43,8 @@ class WebModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun providesGoogleDirectionsService(): GoogleDirectionsService {
+    fun providesGoogleDirectionsService(veturiloApiService: VeturiloApiService): GoogleDirectionsService {
         val googleApiKey = context.getString(R.string.google_directions_key)
-        return GoogleDirectionsService(googleApiKey, context)
+        return GoogleDirectionsService(googleApiKey, context, veturiloApiService)
     }
 }

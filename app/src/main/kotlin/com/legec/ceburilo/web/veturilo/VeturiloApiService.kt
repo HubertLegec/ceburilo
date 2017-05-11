@@ -1,5 +1,6 @@
 package com.legec.ceburilo.web.veturilo
 
+import com.legec.ceburilo.utils.pythagorasEquirectangular
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,5 +35,12 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
 
     fun getPlaceById(id: Long): VeturiloPlace {
         return lastFetchedPlaces[id.toInt()]
+    }
+
+    fun findNearestVeturiloPlace(latitude: Double, longitude: Double): VeturiloPlace? {
+        val veturiloPlaces = getLastFetchedPlaces()
+        return veturiloPlaces.minBy { place ->
+            pythagorasEquirectangular(latitude, longitude, place.latitude, place.longtitude)
+        }
     }
 }

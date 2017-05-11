@@ -11,7 +11,7 @@ class Direction {
     @SerializedName("geocoded_waypoints")
     var geocodedWaypointList: List<GeocodedWaypoint>? = null
     @SerializedName("routes")
-    var routeList: List<Route>? = null
+    var routeList: List<Route> = emptyList()
     var status: String? = null
     @SerializedName("error_message")
     var errorMessage: String? = null

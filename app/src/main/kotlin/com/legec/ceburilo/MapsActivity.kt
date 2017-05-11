@@ -47,8 +47,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mapElements: MapElements? = null
 
     private val callback = object: RouteCallback {
-        override fun onSuccess(polyline: PolylineOptions, distance: String, duration: String) {
-            updateMap(polyline)
+        override fun onSuccess(polylines: List<PolylineOptions>, distance: String, duration: String, waypoints: List<VeturiloPlace>) {
+            updateMap(polylines, waypoints)
             distanceTV.text = "Dystans: " + distance
             durationTV.text = "Czas przejazdu: " + duration
             progressbarView.visibility = View.GONE
@@ -111,8 +111,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         endPoint = veturiloApiService.getPlaceById(endPointId)
     }
 
-    private fun updateMap(polyline: PolylineOptions) {
-        mapElements?.addPolyline(polyline)
+    private fun updateMap(polylines: List<PolylineOptions>, waypoints: List<VeturiloPlace>) {
+        mapElements?.addPolylines(polylines)
+        mapElements?.addWaypoints(waypoints)
         mapElements?.addMarker(startPoint!!.name, startPoint!!.getLatLng())
         mapElements?.addMarker(endPoint!!.name, endPoint!!.getLatLng())
     }

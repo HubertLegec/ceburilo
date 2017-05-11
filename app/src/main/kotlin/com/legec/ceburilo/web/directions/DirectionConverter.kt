@@ -2,9 +2,9 @@ package com.legec.ceburilo.web.directions
 
 import android.content.Context
 import android.util.DisplayMetrics
-import com.akexorcist.googledirection.model.Step
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
+import com.legec.ceburilo.web.directions.model.Step
 import java.util.*
 
 
