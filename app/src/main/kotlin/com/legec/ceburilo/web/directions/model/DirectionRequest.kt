@@ -50,6 +50,11 @@ class DirectionRequest(apiKey: String, origin: LatLng, destination: LatLng) {
         return this
     }
 
+    fun waypoints(waypoints: List<LatLng>): DirectionRequest {
+        param.waypoints.addPoints(waypoints)
+        return this
+    }
+
     fun alternativeRoute(alternative: Boolean): DirectionRequest {
         param.isAlternatives = alternative
         return this
@@ -72,6 +77,7 @@ class DirectionRequest(apiKey: String, origin: LatLng, destination: LatLng) {
                         param.avoid,
                         param.transitMode,
                         param.isAlternatives,
+                        param.waypoints.toParamString(),
                         param.apiKey)
 
         direction.enqueue(object : Callback<Direction> {

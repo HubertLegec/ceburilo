@@ -31,7 +31,7 @@ class GoogleDirectionsService(private val serverKey: String, private val context
             }
 
         }
-        executeSearchQuery(startPoint, endPoint, directionCallback)
+        executeSearchQuery(startPoint, endPoint, emptyList(), directionCallback)
     }
 
     private fun getPolylineFromDirection(direction: Direction): PolylineOptions {
@@ -51,12 +51,13 @@ class GoogleDirectionsService(private val serverKey: String, private val context
         return direction.routeList!![0].legList!![0].duration.text
     }
 
-    private fun executeSearchQuery(startPoint: LatLng, endPoint: LatLng, directionCallback: DirectionCallback) {
+    private fun executeSearchQuery(startPoint: LatLng, endPoint: LatLng, via: List<LatLng>, directionCallback: DirectionCallback) {
         GoogleDirection.withServerKey(serverKey)
                 .from(startPoint)
                 .to(endPoint)
                 .transportMode(TransportMode.BICYCLING)
                 .language(Language.POLISH)
+                .waypoints(via)
                 .execute(directionCallback)
     }
 }

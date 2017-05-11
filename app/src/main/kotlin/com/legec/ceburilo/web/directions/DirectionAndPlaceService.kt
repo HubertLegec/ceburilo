@@ -18,5 +18,6 @@ interface DirectionAndPlaceService {
                      @Query("avoid") avoid: String?,
                      @Query("transit_mode") transitMode: String?,
                      @Query("alternatives") alternatives: Boolean?,
+                     @Query("waypoints") waypoints: String?,
                      @Query("key") apiKey: String): Call<Direction>
 }

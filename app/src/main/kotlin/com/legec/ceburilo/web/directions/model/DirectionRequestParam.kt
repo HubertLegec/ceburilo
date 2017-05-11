@@ -7,6 +7,7 @@ class DirectionRequestParam(
         public val apiKey: String,
         val origin: LatLng,
         val destination: LatLng) {
+
     var transportMode: String? = null
     var departureTime: String? = null
     var language: String? = null
@@ -14,5 +15,6 @@ class DirectionRequestParam(
     var avoid: String? = null
     var transitMode: String? = null
     var isAlternatives: Boolean = false
+    val waypoints: Waypoints = Waypoints()
 
 }
