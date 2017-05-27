@@ -6,14 +6,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.gc.materialdesign.views.Slider
 import com.legec.ceburilo.utils.PermissionHelper
+import com.legec.ceburilo.utils.SharedPrefsService
 import com.legec.ceburilo.web.maps.GoogleLocationService
 import com.legec.ceburilo.web.veturilo.VeturiloApiService
 import com.legec.ceburilo.web.veturilo.VeturiloPlace
@@ -26,12 +25,17 @@ class MainActivity : AppCompatActivity() {
     private val permissionHelper = PermissionHelper(this)
     @Inject lateinit var veturiloApiService: VeturiloApiService
     @Inject lateinit var googleLocationService: GoogleLocationService
+    @Inject lateinit var sharedPrefsService: SharedPrefsService
     @BindView(R.id.fromPoint)
     lateinit var fromSpinner: Spinner
     @BindView(R.id.toPoint)
     lateinit var toSpinner: Spinner
     @BindView(R.id.progressbar_view)
     lateinit var progressView: LinearLayout
+    @BindView(R.id.timeSlider)
+    lateinit var timeSlider: Slider
+    @BindView(R.id.selectedTime)
+    lateinit var selectedTime: TextView
     lateinit private var pointsAdapter: ArrayAdapter<VeturiloPlace>
 
 
@@ -39,10 +43,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        CeburiloApp.webComponent.inject(this)
+        CeburiloApp.appComponent.inject(this)
         pointsAdapter = ArrayAdapter(this, R.layout.spinner, ArrayList<VeturiloPlace>())
         fromSpinner.adapter = pointsAdapter
         toSpinner.adapter = pointsAdapter
+        timeSlider.value = sharedPrefsService.getRoutePartMaxTime()
+        timeSlider.onValueChangedListener = Slider.OnValueChangedListener { value ->
+            selectedTime.text = value.toString() + " min"
+            sharedPrefsService.saveRoutePartMaxTime(value)
+        }
     }
 
     override fun onStart() {

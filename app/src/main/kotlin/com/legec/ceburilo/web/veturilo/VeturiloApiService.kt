@@ -18,6 +18,10 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
                         .cities
                         .first { city -> city.name == "Warszawa" }
                         .places
+                        // only places where we can return our bike
+                        .filter { place -> place.freeRacks > 0 }
+                        // only places that have bikes available
+                        .filter { place -> place.bikes > 0 }
                 lastFetchedPlaces = places
                 callback.onSuccess(places)
             }

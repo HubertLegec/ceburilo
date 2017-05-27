@@ -105,24 +105,26 @@
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/czas_jazdy"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/selected_time"
+                    android:id="@+id/selectedTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:textAlignment="center"/>
+                    android:layout_marginBottom="20dp"
+                    android:text="20 min"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
 
                 <com.gc.materialdesign.views.Slider
                     android:id="@+id/timeSlider"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    materialdesign:max="60"
+                    materialdesign:max="120"
                     materialdesign:min="20"
                     materialdesign:showNumberIndicator="true"
                     android:layout_marginBottom="15dp"/>
