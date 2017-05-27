@@ -11,21 +11,57 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/distanceTV"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:text="Dystans:"
-            android:textSize="18sp" />
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/durationTV"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:text="Czas przejazdu:"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/distanceTV"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:text="@string/dystans"
+                android:textSize="18sp"
+                android:gravity="left|center"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/durationTV"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:text="@string/czas_przejazdu"
+                android:textSize="18sp"
+                android:gravity="left|center"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="left|center">
+                <TextView
+                    android:id="@+id/timeLeftTV"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="@string/time_left"
+                    android:textSize="18sp"
+                    android:gravity="left|center"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <Button
+                    android:id="@+id/startStopButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Start"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -33,7 +69,7 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="12"/>
+            android:layout_weight="7"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="Processing ..."
+                android:text="@string/processing"
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
