@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
 import butterknife.BindView
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var fromSpinner: Spinner
     @BindView(R.id.toPoint)
     lateinit var toSpinner: Spinner
+    @BindView(R.id.progressbar_view)
+    lateinit var progressView: LinearLayout
     lateinit private var pointsAdapter: ArrayAdapter<VeturiloPlace>
 
 
@@ -74,14 +77,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getVeturiloPlaces() {
+        progressView.visibility = View.VISIBLE
         veturiloApiService.getVeturiloPlaces(object : VeturiloPlacesCallback {
             override fun onSuccess(places: List<VeturiloPlace>) {
                 pointsAdapter.clear()
                 pointsAdapter.addAll(places)
                 pointsAdapter.notifyDataSetChanged()
+                progressView.visibility = View.GONE
             }
 
             override fun onError(message: String) {
+                progressView.visibility = View.GONE
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, message)
             }
