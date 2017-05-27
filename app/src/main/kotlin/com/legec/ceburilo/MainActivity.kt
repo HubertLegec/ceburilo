@@ -67,6 +67,10 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    /**
+     * Handle find route button.
+     * It checks if start and end points are not equal and if location permission is granted.
+     */
     @OnClick(R.id.findButton)
     fun onFindButtonClick(view: View) {
         if (!permissionHelper.checkLocationPermission()) {
@@ -86,6 +90,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handle select nearest veturilo point as start of the route button.
+     */
     @OnClick(R.id.selectClosestButton)
     fun selectNearestVeturiloPoint() {
         if (permissionHelper.checkLocationPermission()) {
@@ -97,6 +104,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get list of veturilo points.
+     * Only points which has some empty slots and at least one bike are returned.
+     * On success load list of points to spinners.
+     * On error present error message to user.
+     */
     private fun getVeturiloPlaces() {
         progressView.visibility = View.VISIBLE
         veturiloApiService.getVeturiloPlaces(object : VeturiloPlacesCallback {
@@ -116,12 +129,21 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Get last known user location from Google Location Service.
+     * @return user location
+     */
     private fun getCurrentLocation(): Location {
         val l = googleLocationService.getCurrentLocation()
         Log.d(TAG, "Location:" + l.latitude + ", " + l.longitude)
         return l
     }
 
+    /**
+     * Handle permission request result.
+     * If location permission is granted connect to Google API.
+     * Otherwise show message to user.
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             permissionHelper.LOCATION_REQUEST_CODE -> {
@@ -135,6 +157,9 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**
+     * Show toast with information that location permission is required
+     */
     private fun showPermissionNotGrantedMessage() {
         val permissionMessage = getString(R.string.permission_message)
         Toast.makeText(this, permissionMessage, Toast.LENGTH_LONG).show()

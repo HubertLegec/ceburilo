@@ -32,18 +32,30 @@ class GoogleLocationService(private val context: Context): GoogleApiClient.Conne
                 .getLastLocation(googleApiClient)
     }
 
+    /**
+     * Register new location change listener
+     * @param listener location change listener
+     */
     fun registerLocationChangeListener(listener: LocationChangedListener) {
         if (!locationChangeListeners.contains(listener)) {
             locationChangeListeners.add(listener)
         }
     }
 
+    /**
+     * Notify all registered listeners about new location
+     * @param location new location
+     */
     fun onLocationChanged(location: Location?) {
         if (location!= null) {
             locationChangeListeners.forEach { l -> l.onLocationChange(location) }
         }
     }
 
+    /**
+     * When connected to Google API send location updates to all registered listeners
+     * Updates interval: 5 seconds
+     */
     override fun onConnected(p0: Bundle?) {
         val mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
         if (mLastLocation != null) {

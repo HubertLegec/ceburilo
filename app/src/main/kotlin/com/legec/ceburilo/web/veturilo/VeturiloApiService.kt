@@ -9,6 +9,11 @@ import retrofit2.Response
 class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
     private var lastFetchedPlaces: List<VeturiloPlace> = ArrayList()
 
+    /**
+     * Returns list of available veturilo points and store it in lastFetchedPlaces
+     * Only points which have empty slots and at least one bike are returned
+     * @param callback result callback
+     */
     fun getVeturiloPlaces(callback: VeturiloPlacesCallback) {
         val request = veturiloApiClient.getVeturiloData()
         request.enqueue(object: Callback<VeturiloMarkers> {
@@ -33,14 +38,27 @@ class VeturiloApiService(private val veturiloApiClient: VeturiloApiClient) {
         })
     }
 
+    /**
+     * Return list of veturilo points saved by getVeturiloPlaces method
+     * @return list of veturilo points
+     */
     fun getLastFetchedPlaces(): List<VeturiloPlace> {
         return lastFetchedPlaces
     }
 
+    /**
+     * Find veturilo point on the list of last fetched places
+     */
     fun getPlaceById(id: Long): VeturiloPlace {
         return lastFetchedPlaces[id.toInt()]
     }
 
+    /**
+     * Find veturilo place nearest to given position
+     * @param latitude position latitude
+     * @param longitude position longitude
+     * @return nearest veturilo point
+     */
     fun findNearestVeturiloPlace(latitude: Double, longitude: Double): VeturiloPlace? {
         val veturiloPlaces = getLastFetchedPlaces()
         return veturiloPlaces.minBy { place ->

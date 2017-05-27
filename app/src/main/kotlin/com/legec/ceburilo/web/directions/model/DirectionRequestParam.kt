@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 
 
 class DirectionRequestParam(
-        public val apiKey: String,
+        val apiKey: String,
         val origin: LatLng,
         val destination: LatLng) {
 

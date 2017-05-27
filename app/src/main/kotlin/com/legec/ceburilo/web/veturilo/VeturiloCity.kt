@@ -4,6 +4,9 @@ import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
 
+/**
+ * Representation of city structure from Veturilo API XML
+ */
 @Root(name = "city")
 class VeturiloCity {
     @field:Attribute

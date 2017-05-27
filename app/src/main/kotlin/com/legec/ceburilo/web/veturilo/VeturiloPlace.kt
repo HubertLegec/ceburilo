@@ -4,7 +4,9 @@ import com.google.android.gms.maps.model.LatLng
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Root
 
-
+/**
+ * Representation of single veturilo point from XML returned by Veturilo API
+ */
 @Root(name = "place")
 class VeturiloPlace {
     @field:Attribute
