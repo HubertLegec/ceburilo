@@ -9,4 +9,6 @@
     <string name="end_point_id">END_POINT_ID</string>
     <string name="adowanie_danych">Ładowanie danych...</string>
     <string name="czas_jazdy">Maksymalny czas jazdy bez przesiadki</string>
+    <string name="permission_message">Do poprawnego działania aplikacji wymagane jest użycie lokalizacji</string>
+    <string name="start_end_point_message">Trasa nie może zaczynać się i kończyć w tym samym punkcie</string>
 </resources>

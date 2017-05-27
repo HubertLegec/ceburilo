@@ -8,15 +8,12 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 
 
-
-
-class GoogleLocationService: GoogleApiClient.ConnectionCallbacks {
-
+class GoogleLocationService(private val context: Context): GoogleApiClient.ConnectionCallbacks {
     private var googleApiClient: GoogleApiClient? = null
     private val locationChangeListeners: MutableList<LocationChangedListener> = ArrayList()
     private val mLocationRequest = LocationRequest()
 
-    fun connectApiClient(context: Context) {
+    fun connectApiClient() {
         if (googleApiClient == null) {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
@@ -55,7 +52,6 @@ class GoogleLocationService: GoogleApiClient.ConnectionCallbacks {
         mLocationRequest.interval = 5000 //5 seconds
         mLocationRequest.fastestInterval = 3000 //3 seconds
         mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-
         LocationServices.FusedLocationApi
                 .requestLocationUpdates(googleApiClient, mLocationRequest, {l -> onLocationChanged(l)})
     }

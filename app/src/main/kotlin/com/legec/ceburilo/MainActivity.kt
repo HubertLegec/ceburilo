@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         if (permissionHelper.checkLocationPermission()) {
-            googleLocationService.connectApiClient(this)
+            googleLocationService.connectApiClient()
         }
         getVeturiloPlaces()
         super.onStart()
@@ -69,20 +69,32 @@ class MainActivity : AppCompatActivity() {
 
     @OnClick(R.id.findButton)
     fun onFindButtonClick(view: View) {
-        Log.i(TAG, "button click")
-        val intent = Intent(this, MapsActivity::class.java)
+        if (!permissionHelper.checkLocationPermission()) {
+            showPermissionNotGrantedMessage()
+            return
+        }
         val startPointId = fromSpinner.selectedItemId
         val endPointId = toSpinner.selectedItemId
-        intent.putExtra("START_POINT_ID", startPointId)
-        intent.putExtra("END_POINT_ID", endPointId)
-        startActivity(intent)
+        if (startPointId == endPointId) {
+            val message = getString(R.string.start_end_point_message)
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        } else {
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra("START_POINT_ID", startPointId)
+            intent.putExtra("END_POINT_ID", endPointId)
+            startActivity(intent)
+        }
     }
 
     @OnClick(R.id.selectClosestButton)
     fun selectNearestVeturiloPoint() {
-        val location = getCurrentLocation()
-        val closestPoint = veturiloApiService.findNearestVeturiloPlace(location.latitude, location.longitude)
-        fromSpinner.setSelection(pointsAdapter.getPosition(closestPoint))
+        if (permissionHelper.checkLocationPermission()) {
+            val location = getCurrentLocation()
+            val closestPoint = veturiloApiService.findNearestVeturiloPlace(location.latitude, location.longitude)
+            fromSpinner.setSelection(pointsAdapter.getPosition(closestPoint))
+        } else {
+            showPermissionNotGrantedMessage()
+        }
     }
 
     private fun getVeturiloPlaces() {
@@ -114,15 +126,17 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             permissionHelper.LOCATION_REQUEST_CODE -> {
                 if (permissionHelper.isLocationPermissionGranted(grantResults)) {
-                        googleLocationService.connectApiClient(this)
+                        googleLocationService.connectApiClient()
                 } else {
-                    // permission denied
-                    // TODO Disable the functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show()
+                    showPermissionNotGrantedMessage()
                 }
             }
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun showPermissionNotGrantedMessage() {
+        val permissionMessage = getString(R.string.permission_message)
+        Toast.makeText(this, permissionMessage, Toast.LENGTH_LONG).show()
     }
 }

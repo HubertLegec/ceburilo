@@ -25,7 +25,6 @@ import com.legec.ceburilo.web.veturilo.VeturiloPlace
 import javax.inject.Inject
 
 
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val TAG = "MAPS_ACTIVITY"
     @BindString(R.string.start_point_id)
@@ -46,6 +45,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var endPoint: VeturiloPlace? = null
     private var mapElements: MapElements? = null
 
+    /**
+     * Get route callback.
+     * On success list of route parts, intermediate points, distance and duration is returned.
+     * On error message is presented to user.
+     */
     private val callback = object: RouteCallback {
         override fun onSuccess(polylines: List<PolylineOptions>, distance: String, duration: String, waypoints: List<VeturiloPlace>) {
             updateMap(polylines, waypoints)
@@ -91,10 +95,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val latLong = LatLng(currLoc.latitude, currLoc.longitude)
         val zoomLevel = 16.toFloat()
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLong, zoomLevel))
-        showRoute()
+        getRoute()
     }
 
-    private fun showRoute() {
+    /**
+     * Get route between given start and end point.
+     * Clear the map before request.
+     */
+    private fun getRoute() {
         progressbarView.visibility = View.VISIBLE
         mapElements?.clearMap()
         googleDirectionsService.getRoute(
@@ -104,6 +112,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
+    /**
+     * Update start and end point of the route.
+     * Get data from intent extra.
+     */
     private fun updateStartAndEndPoint() {
         val startPointId = intent.getLongExtra(startPointIdDescriptor, 0)
         val endPointId = intent.getLongExtra(endPointIdDescriptor, 0)
@@ -111,6 +123,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         endPoint = veturiloApiService.getPlaceById(endPointId)
     }
 
+    /**
+     * Draw route on the map.
+     * Draw start, end and intermediate points on the map.
+     * @param polylines route parts
+     * @param waypoints intermediate points
+     */
     private fun updateMap(polylines: List<PolylineOptions>, waypoints: List<VeturiloPlace>) {
         mapElements?.addPolylines(polylines)
         mapElements?.addWaypoints(waypoints)

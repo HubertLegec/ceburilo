@@ -17,4 +17,8 @@ class Direction {
     var errorMessage: String? = null
     val isOK: Boolean
         get() = status == RequestResult.OK
+
+    fun getRoute(): Route {
+        return routeList[0]
+    }
 }
