@@ -32,19 +32,20 @@ class GoogleDirectionsService(
         waypoints = emptyList()
         val directionCallback = object : DirectionCallback {
             override fun onDirectionSuccess(direction: Direction, rawBody: String) {
-                Log.i(TAG, "Success")
                 if (direction.isOK) {
                     val numberOfWayPartsNeeded = numberOfWayPartsNeeded(direction)
                     val numberOfLegs = direction.getRoute().legList.size
                     if (numberOfWayPartsNeeded > 0 && numberOfLegs == 1) {
                         waypoints = determineWayPoints(direction, numberOfWayPartsNeeded)
-                        val waypointsLatLng = waypoints.map { w -> w.getLatLng() }
-                        executeSearchQuery(startPoint, endPoint, waypointsLatLng, this)
+                        val waypointsLatLng = waypoints
+                                .map { w -> w.getLatLng() }
+                        if (waypointsLatLng.isEmpty()) {
+                            returnRoute(direction, callback)
+                        } else {
+                            executeSearchQuery(startPoint, endPoint, waypointsLatLng, this)
+                        }
                     } else {
-                        val polylines = getPolylinesFromDirection(direction)
-                        val distance = getDistanceFromDirection(direction)
-                        val duration = getTimeFromDirection(direction)
-                        callback.onSuccess(polylines, distance, duration, waypoints)
+                        returnRoute(direction, callback)
                     }
                 } else {
                     callback.onError("Nie udało się znaleźć trasy: " + direction.errorMessage)
@@ -58,6 +59,18 @@ class GoogleDirectionsService(
 
         }
         executeSearchQuery(startPoint, endPoint, emptyList(), directionCallback)
+    }
+
+    /**
+     * Transform direction to polylines, duration and distance and call onSuccess callbaack method
+     * @param direction route
+     * @param callback result callback
+     */
+    private fun returnRoute(direction: Direction, callback: RouteCallback) {
+        val polylines = getPolylinesFromDirection(direction)
+        val distance = getDistanceFromDirection(direction)
+        val duration = getTimeFromDirection(direction)
+        callback.onSuccess(polylines, distance, duration, waypoints)
     }
 
     /**
@@ -139,6 +152,7 @@ class GoogleDirectionsService(
         return IntRange(1, numberOfWayParts)
                 .map { v -> v.toDouble() / (numberOfWayParts + 1) * totalTime }
                 .map { t -> findWaypointLocationForTime(t, leg) }
+                .requireNoNulls()
                 .map { l -> veturiloApiService.findNearestVeturiloPlace(l.latitude, l.longitude) }
                 .distinct()
                 .requireNoNulls()
@@ -149,14 +163,17 @@ class GoogleDirectionsService(
      * Point is a connection of any two sections of our way.
      * @param t maximal time
      * @param leg way from start to end point
-     * @return location of point on the way
+     * @return location of point on the way or null if can't be find
      */
-    private fun findWaypointLocationForTime(t: Double, leg: Leg): Coordination {
+    private fun findWaypointLocationForTime(t: Double, leg: Leg): Coordination? {
         var idx = 0
         var time = leg.stepList[idx].getDurationInSeconds()
         while (time < t && idx < leg.stepList.size) {
             idx += 1
             time += leg.stepList[idx].getDurationInSeconds()
+        }
+        if (time < t) {
+            return null
         }
         return leg.stepList[idx].startLocation
     }

@@ -107,9 +107,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val milisInFuture = sharedPrefsService.getRoutePartMaxTime() * 60 * 1000
         timer = object: CountDownTimer(milisInFuture.toLong(), interval.toLong()) {
             override fun onFinish() {
-                timeLeftTV.text = "Koniec czasu!"
+                timeLeftTV.text = getString(R.string.end_of_time)
                 timeLeftTV.setTextColor(Color.RED)
-                startStopButton.text = "Start"
+                startStopButton.text = getString(R.string.start)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -121,7 +121,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         timer?.start()
-        startStopButton.text = "Reset"
+        startStopButton.text = getString(R.string.reset)
     }
 
     /**

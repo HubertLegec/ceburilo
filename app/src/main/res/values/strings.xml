@@ -15,4 +15,7 @@
     <string name="czas_przejazdu">Czas przejazdu:</string>
     <string name="processing">Processing ...</string>
     <string name="time_left">Czas do przesiadki:</string>
+    <string name="end_of_time">Koniec czasu!</string>
+    <string name="reset">Reset</string>
+    <string name="start">Start</string>
 </resources>
